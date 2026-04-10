@@ -1,0 +1,6 @@
+{
+  "reject": [
+    "parse-ms",
+    "video.js"
+  ]
+}
