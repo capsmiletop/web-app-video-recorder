@@ -10,16 +10,22 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const rootDir = path.resolve(__dirname, '..', '..');
 
-// copy fonts to dist directory
+// copy fonts, Vercel/static entry (dist has no index.html without this)
 let copyFontsPlugin = new CopyWebpackPlugin({
-    patterns: [{
-        from: 'src/fonts/*',
-        to: 'fonts/[name][ext]',
-        globOptions: {
-            dot: false,
-            ignore: ['**/*.json', '**/*.md']
+    patterns: [
+        {
+            from: 'src/fonts/*',
+            to: 'fonts/[name][ext]',
+            globOptions: {
+                dot: false,
+                ignore: ['**/*.json', '**/*.md']
+            }
+        },
+        {
+            from: 'site/index.html',
+            to: 'index.html'
         }
-    }]
+    ]
 });
 
 module.exports = {

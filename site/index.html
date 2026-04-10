@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Video recorder</title>
+  <link href="https://cdn.jsdelivr.net/npm/video.js@8.21.0/dist/video-js.min.css" rel="stylesheet">
+  <link href="/css/videojs.record.min.css" rel="stylesheet">
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 42rem; margin: 2rem auto; padding: 0 1rem; }
+    #myVideo { background-color: #1a535c; }
+  </style>
+</head>
+<body>
+  <h1>Video recorder</h1>
+  <p>Allow camera access to record. Built assets are served from this deployment; Video.js and helpers load from a CDN.</p>
+
+  <video id="myVideo" playsinline class="video-js vjs-default-skin"></video>
+
+  <script src="https://cdn.jsdelivr.net/npm/video.js@8.21.0/dist/video.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/recordrtc@5.6.2/RecordRTC.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/webrtc-adapter@9.0.1/out/adapter.js"></script>
+  <script src="/videojs.record.min.js"></script>
+  <script>
+  (function () {
+    var isOpera = !!window.opera || navigator.userAgent.indexOf('OPR/') !== -1;
+
+    var options = {
+      controls: true,
+      width: 320,
+      height: 240,
+      fluid: false,
+      bigPlayButton: false,
+      controlBar: { volumePanel: false },
+      plugins: {
+        record: {
+          audio: false,
+          video: true,
+          maxLength: 60,
+          displayMilliseconds: false,
+          debug: false
+        }
+      }
+    };
+
+    if (isOpera) {
+      options.plugins.record.videoMimeType = 'video/webm;codecs=vp8';
+    }
+
+    var player = videojs('myVideo', options, function () {
+      videojs.log('video.js ' + videojs.VERSION + ' + videojs-record ' + videojs.getPluginVersion('record'));
+    });
+
+    player.on('deviceError', function () {
+      console.warn('device error:', player.deviceErrorCode);
+    });
+    player.on('error', function (_el, err) {
+      console.error(err);
+    });
+    player.on('finishRecord', function () {
+      console.log('recording:', player.recordedData);
+    });
+  })();
+  </script>
+</body>
+</html>
